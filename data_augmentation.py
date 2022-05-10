@@ -1,11 +1,10 @@
+import os
+import argparse
 import numpy as np
 import matplotlib.pyplot as plt
 import tensorflow as tf
-import os
 from tensorflow.keras.processing.image import ImageDataGenerator
 from shutil import copy2, move
-from absl import app, flags, logging
-import argparse
 
 class DataAugmentation():
 
@@ -15,15 +14,17 @@ class DataAugmentation():
         self.maskDir = maskPath
         self.numberOfImages = numberOfImages
         self.rotationRange = 30
-        self.widthSiftRange = 0.2
+        self.widthShiftRange = 0.2 
+        self.heightShiftRange = 0.2
         self.zoomRange = 0.2
         self.horizontalFlip = True
+        self.verticalFlip = True
 
     def makeDirectories(self):
 
         try:
-            os.mkdir(augmentedPath)
-            self.augmentedPath = augmentedDataPath
+            self.augmentedPath = "augmentedDataPath"
+            os.mkdir(self.augmentedPath)
         except:
             pass
 
@@ -43,22 +44,30 @@ class DataAugmentation():
 
     def augmentation(self):
 
-        self.imageSize = cv2.imread(os.path.join(self.maskDir, os.listdir(self.maskDir)[0)).shape[:2]
+        self.imageSize = cv2.imread(os.path.join(self.maskDir, os.listdir(self.maskDir)[0])).shape[:2]
         
         dataGenerator = ImageDataGenerator(
+                featurewise_center = False,
+                featurewise_std_normalization = False,
                 rotation_range = self.rotationRange,
-                width_shift_range = self.widthSiftRange,
+                width_shift_range = self.widthShiftRange,
+                height_shift_range = self.heightShiftRange,
                 zoom_range = self.zoomRange,
-                horizontal_flip = self.horizontalFlip)
+                horizontal_flip = self.horizontalFlip,
+                vertical_flip = self.verticalFlip)
 
 
 
-        image_generator = datagen.flow_from_directory(directory=self.imagePath,target_size=self.imageSize,
-                                                    save_to_dir=self.augmentedImagesPath, class_mode=None,
+        image_generator = datagen.flow_from_directory(directory=self.imagePath,
+                                                    target_size=self.imageSize,
+                                                    save_to_dir=self.augmentedImagesPath,
+                                                    class_mode=None,
                                                     save_format='jpg', seed=42)
 
-        masks_generator = datagen.flow_from_directory(directory=self.maskDir,target_size=self.imageSize,
-                                                    save_to_dir=self.augmentedTargetPath, class_mode=None,
+        masks_generator = datagen.flow_from_directory(directory=self.maskDir,
+                                                    target_size=self.imageSize,
+                                                    save_to_dir=self.augmentedTargetPath,
+                                                    class_mode=None,
                                                     save_format='png', seed=42)
         
         n_iter = int(self.numberOfImages/32)
@@ -66,6 +75,12 @@ class DataAugmentation():
         if numberOfImages % 32:
             n_iter += 1
         
+        
+        print(f"Copying Original Images")
+        for img_path, mask_path in zip(os.listdir(self.imagePath), os.listdir(self.maskDir)):
+            copy2(os.path.join(self.imagePath, img_path), self.augmentedImagesPath)
+            copy2(os.path.join(self.maskDir, mask_path), self. augmentedTargetPath)
+
         print(f"Generating {n_iter*32} images")
         for i in range(n_iter):
             image_generator.next()
