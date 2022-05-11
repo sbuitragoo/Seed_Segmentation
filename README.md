@@ -1,3 +1,3 @@
 # Tomato Seed Segmentation
 
-![Sample_Labeled_Image](/Static/Label.png)
+![Alt Text](/Static/seeds_growing.gif)
