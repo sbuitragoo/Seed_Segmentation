@@ -1,16 +1,16 @@
 import tensorflow as tf 
 
-from Models.MobileNetV2 import MobileNet
-from Models.Unet import Unet
-from Models.InceptionResnetV2_2 import InceptionResnet
+from Models.MobileNetV2 import get_model as getMobilenet
+from Models.Unet import get_model as getUnet
+from Models.InceptionResnetV2_2 import get_model as getIRv2
 
 class ModelToUse():
 
     def __init__(self):
 
-        self.models = {'mobilenetv2': MobileNet.get_model,
-                        'unet':Unet.get_model,
-                        'inceptionresnetv2':InceptionResnet.get_model}
+        self.models = {'mobilenetv2': getMobilenet,
+                        'unet': getUnet,
+                        'inceptionresnetv2': getIRv2}
 
     def print_available_models(self):
         print('Availaible models: ')
@@ -18,10 +18,10 @@ class ModelToUse():
             print(f'\t{model}')
 
 
-    def get_model(self,model='mobilenetv2'):
+    def get_model(self, model='mobilenetv2', **kwargs):
         model = model.lower()
         try: 
-            model_keras = self.models[model]()
+            model_keras = self.models[model](**kwargs)
             return model_keras
         except KeyError: 
             print(f'Model {model} is not avalaible')
