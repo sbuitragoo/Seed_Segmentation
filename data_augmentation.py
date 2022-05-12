@@ -1,9 +1,10 @@
 import os
 import argparse
+import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 import tensorflow as tf
-from tensorflow.keras.processing.image import ImageDataGenerator
+from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from shutil import copy2, move
 
 class DataAugmentation():
@@ -29,14 +30,14 @@ class DataAugmentation():
             pass
 
         try:
-            os.mkdir(os.path.join(self.augmentedPath, "images"))
             self.augmentedImagesPath = os.path.join(self.augmentedPath, "images")
+            os.mkdir(os.path.join(self.augmentedPath, "images"))
         except:
             pass
 
         try: 
-            os.mkdir(os.path.join(self.augmentedPath, "targets"))
             self.augmentedTargetPath = os.path.join(self.augmentedPath, "targets")
+            os.mkdir(os.path.join(self.augmentedPath, "targets"))
         except:
             pass
         
@@ -58,13 +59,13 @@ class DataAugmentation():
 
 
 
-        image_generator = datagen.flow_from_directory(directory=self.imagePath,
+        image_generator = dataGenerator.flow_from_directory(directory=self.imagePath,
                                                     target_size=self.imageSize,
                                                     save_to_dir=self.augmentedImagesPath,
                                                     class_mode=None,
                                                     save_format='jpg', seed=42)
 
-        masks_generator = datagen.flow_from_directory(directory=self.maskDir,
+        masks_generator = dataGenerator.flow_from_directory(directory=self.maskDir,
                                                     target_size=self.imageSize,
                                                     save_to_dir=self.augmentedTargetPath,
                                                     class_mode=None,
@@ -72,7 +73,7 @@ class DataAugmentation():
         
         n_iter = int(self.numberOfImages/32)
 
-        if numberOfImages % 32:
+        if self.numberOfImages % 32:
             n_iter += 1
         
         
@@ -93,7 +94,7 @@ class DataAugmentation():
 
 if __name__ == "__main__":
 
-    parser = argparse.AargumentParser()
+    parser = argparse.ArgumentParser()
     subparser = parser.add_subparsers(dest='command')
     auto = subparser.add_parser('auto')
     auto.add_argument('--imp', type=str, required=True,

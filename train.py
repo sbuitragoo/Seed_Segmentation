@@ -1,7 +1,10 @@
 from Model import ModelToUse 
 import tensorflow as tf
 import matplotlib.pyplot as plt
-
+import os
+import cv2
+import argparse
+import numpy as np
 
 class Training():
 
@@ -9,28 +12,82 @@ class Training():
         
         self.imageSize = 224
         self.classes = 3
-        self.callback = tf.keras.callbacks.ModelCheckpoint(filepath = checkpoint_path,
+        self.callback = tf.keras.callbacks.ModelCheckpoint(filepath = self.checkpoint_path,
                                                             verbose = 1,
                                                             save_weights_only = True)
         self.model = ModelToUse().get_model()
         self.epochs = 100
         self.batchSize = 32
+        self.checkpoint_path = "weights"
 
-
-    def loadTrainingDataset(self, trainPath):
+    def loadTrainingDataset(self, trainImagePath, trainMaskPath, quantity,resize):
         
-        #Por definir
-        #self.trainDataset = ""
-        pass
+        self.trainImagePath = trainImagePath
+        image_data = []
 
-    def loadValidationDataset(self, valPath):
+        if quantity:
+            for img in sorted(os.listdir(self.trainImagePath)[int(len(os.listdir(self.trainImagePath))*quantity):]):
+                image = cv2.imread(os.path.join(self.trainImagePath, img))
+                if resize:
+                    image = cv2.resize(image, (224,224))
+                    image_data.append(image)
+                else:
+                    image_data.append(image)
+            image_data = np.array(image_data)
+
+        self.trainMaskPath = trainMaskPath
+        mask_data = []
+
+        if quantity:
+            for img in sorted(os.listdir(self.trainMaskPath)[int(len(os.listdir(self.trainMaskPath))*quantity):]):
+                image = cv2.imread(os.path.join(self.trainMaskPath, img))
+                if resize:
+                    image = cv2.resize(image, (224,224))
+                    mask_data.append(image)
+                else:
+                    mask_data.append(image)
+            mask_data = np.array(mask_data)  
+
+        return image_data, mask_data
+
+    def loadValidationDataset(self, valImagePath, valMaskPath, quantity,resize):
         
-        #Por definir
-        #self.validationDataset = validationData
-        pass
+        self.valImagePath = valImagePath
+        image_data = []
+
+        if quantity:
+            for img in sorted(os.listdir(self.valImagePath)[int(len(os.listdir(self.valImagePath))*quantity):]):
+                image = cv2.imread(os.path.join(self.valImagePath, img))
+                if resize:
+                    image = cv2.resize(image, (224,224))
+                    image_data.append(image)
+                else:
+                    image_data.append(image)
+            image_data = np.array(image_data)
+
+        self.valMaskPath = valMaskPath
+        mask_data = []
+
+        if quantity:
+            for img in sorted(os.listdir(self.valMaskPath)[int(len(os.listdir(self.valMaskPath))*quantity):]):
+                image = cv2.imread(os.path.join(self.valMaskPath, img))
+                if resize:
+                    image = cv2.resize(image, (224,224))
+                    mask_data.append(image)
+                else:
+                    mask_data.append(image)
+            mask_data = np.array(mask_data)  
+
+        return image_data, mask_data
 
     def build(self):
-        self.model.save_weights(checkpoint_path.format(epoch=0))
+
+        try: 
+            os.mkdir(self.checkpoint_path)
+        except:
+            pass
+
+        self.model.save_weights(self.checkpoint_path.format(epoch=0))
         self.model.compile(optimizer='adam', metrics=['accuracy'],
                             loss = tf.keras.losses.SparseCategoricalCrossentropy())
 
@@ -44,8 +101,9 @@ class Training():
         return self.model, self.modelHistory
 
     def startTraining(self, trainPath, valPath):
+
         self.loadTrainingDataset(trainPath)
-        self.loadValidationDadaset(valPath)
+        self.loadValidationDataset(valPath)
         model, history = self.build()
         return model, history
 
