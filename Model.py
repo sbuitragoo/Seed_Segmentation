@@ -32,5 +32,5 @@ if __name__ == '__main__':
     Model = ModelToUse()
     Model.print_available_models()
     model = Model.get_model()
-    model.summary()
-    tf.keras.utils.plot_model(model,to_file='./model.png',show_shapes=False,show_layer_names=False)
+    model().summary()
+    tf.keras.utils.plot_model(model(),to_file='./model.png',show_shapes=False,show_layer_names=False)
