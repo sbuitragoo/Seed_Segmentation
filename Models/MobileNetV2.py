@@ -69,6 +69,7 @@ class MobileNet():
         return tf.keras.Model(inputs=inputs, outputs=x,name=name)
 
 if __name__ == '__main__':
+    pass
     # Mobilenet = MobileNet()
     # model = Mobilenet.get_model(output_channels=2)
     # model.summary()

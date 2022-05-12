@@ -80,6 +80,7 @@ class Unet():
         return model
 
 if __name__ == '__main__':
+    pass
     # unet = Unet()
     # model = Unet.get_model()
     # model.summary()

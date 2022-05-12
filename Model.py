@@ -29,6 +29,7 @@ class ModelToUse():
             exit()
 
 if __name__ == '__main__':
+    pass
     # Model = ModelToUse()
     # Model.print_available_models()
     # model = Model.get_model()
