@@ -12,6 +12,7 @@ class Training():
         
         self.imageSize = 224
         self.classes = 3
+        self.checkpoint_path = "weights"
         self.callback = tf.keras.callbacks.ModelCheckpoint(filepath = self.checkpoint_path,
                                                             verbose = 1,
                                                             save_weights_only = True)
@@ -91,10 +92,10 @@ class Training():
         self.model.compile(optimizer='adam', metrics=['accuracy'],
                             loss = tf.keras.losses.SparseCategoricalCrossentropy())
 
-        self.modelHistory = model.fit(
-                                self.trainDataset,
+        self.modelHistory = self.model.fit(
+                                self.trainImages, self.trainTargets,
                                 epochs = self.epochs,
-                                validation_data = self.validationDataset,
+                                validation_data = (self.valImages, self.valTargets),
                                 batch_size = self.batchSize,
                                 callbacks = [self.callback])
         
@@ -102,8 +103,9 @@ class Training():
 
     def startTraining(self, imagePath, maskPath):
 
-        self.loadTrainingDataset(imagePath, maskPath)
-        self.loadValidationDataset(imagePath, maskPath)
+        self.trainImages, self.trainTargets = self.loadTrainingDataset(imagePath, maskPath)
+        self.valImages, self.valTargets = self.loadValidationDataset(imagePath, maskPath)
+        
         model, history = self.build()
         return model, history
 
@@ -120,8 +122,13 @@ if __name__ == "__main__":
 
     arguments = parser.parse_args()
 
-    if arguments == "params":
+    def retData(input1, input2):
+        return input1, input2
+
+    if arguments.command == "params":
 
         training = Training()
 
         model, history = training.startTraining(arguments.i, arguments.m)
+
+        retData(model, history)
