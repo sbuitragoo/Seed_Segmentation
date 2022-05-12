@@ -20,13 +20,13 @@ class Training():
         self.batchSize = 32
         self.checkpoint_path = "weights"
 
-    def loadTrainingDataset(self, trainImagePath, trainMaskPath, quantity,resize):
+    def loadTrainingDataset(self, trainImagePath, trainMaskPath, quantity=0.75,resize=True):
         
         self.trainImagePath = trainImagePath
         image_data = []
 
         if quantity:
-            for img in sorted(os.listdir(self.trainImagePath)[int(len(os.listdir(self.trainImagePath))*quantity):]):
+            for img in sorted(os.listdir(self.trainImagePath)[:int(len(os.listdir(self.trainImagePath))*quantity)]):
                 image = cv2.imread(os.path.join(self.trainImagePath, img))
                 if resize:
                     image = cv2.resize(image, (224,224))
@@ -39,7 +39,7 @@ class Training():
         mask_data = []
 
         if quantity:
-            for img in sorted(os.listdir(self.trainMaskPath)[int(len(os.listdir(self.trainMaskPath))*quantity):]):
+            for img in sorted(os.listdir(self.trainMaskPath)[:int(len(os.listdir(self.trainMaskPath))*quantity)]):
                 image = cv2.imread(os.path.join(self.trainMaskPath, img))
                 if resize:
                     image = cv2.resize(image, (224,224))
@@ -50,7 +50,7 @@ class Training():
 
         return image_data, mask_data
 
-    def loadValidationDataset(self, valImagePath, valMaskPath, quantity,resize):
+    def loadValidationDataset(self, valImagePath, valMaskPath, quantity=0.75,resize=True):
         
         self.valImagePath = valImagePath
         image_data = []
@@ -100,10 +100,10 @@ class Training():
         
         return self.model, self.modelHistory
 
-    def startTraining(self, trainPath, valPath):
+    def startTraining(self, trainImPath, trainImMask, valImPath, valImMask):
 
-        self.loadTrainingDataset(trainPath)
-        self.loadValidationDataset(valPath)
+        self.loadTrainingDataset(trainImPath, trainImMask)
+        self.loadValidationDataset(valImPath, valImMask)
         model, history = self.build()
         return model, history
 
@@ -112,10 +112,15 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     subparser = parser.add_subparsers(dest='command')
     params = subparser.add_parser('params')
-    params.add_argument('--t', type=str, required=True,
+    params.add_argument('--ti', type=str, required=True,
                         help="Path to the training images")
-    params.add_argument('--v', type=str, required=True,
+    params.add_argument('--vi', type=str, required=True,
                         help="Path to the validation images")
+    params.add_argument('--tm', type=str, required=True,
+                        help="Path to the training images")
+    params.add_argument('--vm', type=str, required=True,
+                        help="Path to the validation images")
+
 
     arguments = parser.parse_args()
 
@@ -123,4 +128,4 @@ if __name__ == "__main__":
 
         training = Training()
 
-        model, history = training.startTraining(arguments.t, arguments.q)
+        model, history = training.startTraining(arguments.ti, arguments.tm, arguments.vi, arguments.vm)
