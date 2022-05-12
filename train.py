@@ -100,10 +100,10 @@ class Training():
         
         return self.model, self.modelHistory
 
-    def startTraining(self, trainImPath, trainImMask, valImPath, valImMask):
+    def startTraining(self, imagePath, maskPath):
 
-        self.loadTrainingDataset(trainImPath, trainImMask)
-        self.loadValidationDataset(valImPath, valImMask)
+        self.loadTrainingDataset(imagePath, maskPath)
+        self.loadValidationDataset(imagePath, maskPath)
         model, history = self.build()
         return model, history
 
@@ -112,14 +112,10 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     subparser = parser.add_subparsers(dest='command')
     params = subparser.add_parser('params')
-    params.add_argument('--ti', type=str, required=True,
-                        help="Path to the training images")
-    params.add_argument('--vi', type=str, required=True,
-                        help="Path to the validation images")
-    params.add_argument('--tm', type=str, required=True,
-                        help="Path to the training images")
-    params.add_argument('--vm', type=str, required=True,
-                        help="Path to the validation images")
+    params.add_argument('--i', type=str, required=True,
+                        help="Path to the images")
+    params.add_argument('--m', type=str, required=True,
+                        help="Path to the masks")
 
 
     arguments = parser.parse_args()
@@ -128,4 +124,4 @@ if __name__ == "__main__":
 
         training = Training()
 
-        model, history = training.startTraining(arguments.ti, arguments.tm, arguments.vi, arguments.vm)
+        model, history = training.startTraining(arguments.i, arguments.m)
