@@ -18,10 +18,10 @@ class ModelToUse():
             print(f'\t{model}')
 
 
-    def get_model(self,model='mobilenetv2', **kwargs):
+    def get_model(self,model='mobilenetv2'):
         model = model.lower()
         try: 
-            model_keras = self.models[model](**kwargs)
+            model_keras = self.models[model]
             return model_keras
         except KeyError: 
             print(f'Model {model} is not avalaible')
@@ -31,6 +31,6 @@ class ModelToUse():
 if __name__ == '__main__':
     Model = ModelToUse()
     Model.print_available_models()
-    model = Model.get_model(output_channels=2)
+    model = Model.get_model()
     model.summary()
     tf.keras.utils.plot_model(model,to_file='./model.png',show_shapes=False,show_layer_names=False)
