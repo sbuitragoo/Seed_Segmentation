@@ -80,7 +80,7 @@ class Unet():
         return model
 
 if __name__ == '__main__':
-    unet = Unet()
-    model = Unet.get_model()
-    model.summary()
-    tf.keras.utils.plot_model(model,to_file='data/model.png',show_shapes=False,show_layer_names=False)
+    # unet = Unet()
+    # model = Unet.get_model()
+    # model.summary()
+    # tf.keras.utils.plot_model(model,to_file='data/model.png',show_shapes=False,show_layer_names=False)

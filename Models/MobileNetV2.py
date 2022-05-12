@@ -69,7 +69,7 @@ class MobileNet():
         return tf.keras.Model(inputs=inputs, outputs=x,name=name)
 
 if __name__ == '__main__':
-    Mobilenet = MobileNet()
-    model = Mobilenet.get_model(output_channels=2)
-    model.summary()
-    tf.keras.utils.plot_model(model,to_file='data/model.png',show_shapes=False,show_layer_names=False)
+    # Mobilenet = MobileNet()
+    # model = Mobilenet.get_model(output_channels=2)
+    # model.summary()
+    # tf.keras.utils.plot_model(model,to_file='data/model.png',show_shapes=False,show_layer_names=False)
