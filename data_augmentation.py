@@ -71,9 +71,9 @@ class DataAugmentation():
                                                     class_mode=None,
                                                     save_format='png', seed=42)
         
-        n_iter = int(self.numberOfImages/32)
+        n_iter = int(int(self.numberOfImages)/32)
 
-        if self.numberOfImages % 32:
+        if int(self.numberOfImages) % 32:
             n_iter += 1
         
         
