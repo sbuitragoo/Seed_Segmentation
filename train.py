@@ -101,11 +101,22 @@ class Training():
         
         return self.model, self.modelHistory
 
+
+    def transform_targets(self, targets):
+        targets_encoded = []
+        for target in targets:
+            target_encoded =  tf.one_hot(target, depth=len(np.unique(target).shape))
+            targets_encoded.append(target_encoded)
+        return np.array(targets_encoded)
+
     def startTraining(self, imagePath, maskPath):
 
         self.trainImages, self.trainTargets = self.loadTrainingDataset(imagePath, maskPath)
         self.valImages, self.valTargets = self.loadValidationDataset(imagePath, maskPath)
-        
+
+        self.trainTargets = self.transform_targets(self.trainTargets)
+        self.trainValtargets = self.transform_targets(self.valTargets)
+
         model, history = self.build()
         return model, history
 
