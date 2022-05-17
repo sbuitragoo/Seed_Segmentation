@@ -85,12 +85,12 @@ class Training():
             pass
 
         if epochs != None: 
-            self.epochs = epochs 
+            self.epochs = int(epochs) 
         else:
             self.epochs = 100
         
         if batchSize != None: 
-            self.batchSize = batchSize
+            self.batchSize = int(batchSize)
         else: 
             self.batchSize = 64
 
@@ -116,9 +116,9 @@ class Training():
             target_encoded =  tf.one_hot(target, depth=len(np.unique(target).shape))
             targets_encoded.append(target_encoded)
         return np.array(targets_encoded)
-        
 
-    def startTraining(self, imagePath, maskPath):
+
+    def startTraining(self, imagePath, maskPath, model, epochs, batchSize):
 
         self.trainImages, self.trainTargets = self.loadTrainingDataset(imagePath, maskPath)
         self.valImages, self.valTargets = self.loadValidationDataset(imagePath, maskPath)
@@ -129,7 +129,7 @@ class Training():
         self.trainTargets = self.transform_targets(self.trainTargets)
         self.Valtargets = self.transform_targets(self.valTargets)
 
-        model, history = self.build()
+        model, history = self.build(model=model, epochs=epochs, batchSize=batchSize)
         return model, history
 
 if __name__ == "__main__":
@@ -141,6 +141,12 @@ if __name__ == "__main__":
                         help="Path to the images")
     params.add_argument('--m', type=str, required=True,
                         help="Path to the masks")
+    params.add_argument('--model', type=str, required=False,
+                        help="Model to use")
+    params.add_argument('--epochs', type=str, required=False,
+                        help="Epochs")
+    params.add_argument('--batch', type=str, required=False,
+                        help="Batch Size")
 
 
     arguments = parser.parse_args()
@@ -152,6 +158,6 @@ if __name__ == "__main__":
 
         training = Training()
 
-        model, history = training.startTraining(arguments.i, arguments.m)
+        model, history = training.startTraining(imagePath = arguments.i, maskPath = arguments.m, model = arguments.model, epochs = arguments.epochs, batchSize = arguments.batch)
 
         retData(model, history)
