@@ -19,7 +19,7 @@ def upsample(filters,size,strides=2,padding="same",batchnorm=False,dropout=0):
 
 def get_encoder(input_shape=[None,None,3],name="encoder", trainable = True): 
     Input = tf.keras.layers.Input(shape=input_shape)
-    base_model = tf.keras.applications.InceptionResnetV2(input_tensor=Input, include_top=False)
+    base_model = tf.keras.applications.InceptionResNetV2(input_tensor=Input, include_top=False)
     layer_names = [
     'block_1_expand_relu',   # 64x64
     'block_3_expand_relu',   # 32x32
@@ -59,7 +59,7 @@ def get_model(output_channels=3,size=224,name="InceptionResnetV2",dropout=0, tra
 
     last = tf.keras.layers.Conv2DTranspose(
         output_channels, 3, strides=2,
-        padding='same',activation=tf.keras.activations.sigmoid)  #64x64 -> 128x128
+        padding='same',activation="softmax")  #64x64 -> 128x128
 
     x = last(x)
     return tf.keras.Model(inputs=inputs, outputs=x,name=name)
