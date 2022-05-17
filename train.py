@@ -16,10 +16,6 @@ class Training():
         self.callback = tf.keras.callbacks.ModelCheckpoint(filepath = self.checkpoint_path,
                                                             verbose = 1,
                                                             save_weights_only = True)
-        self.model = ModelToUse().get_model()
-        self.epochs = 100
-        self.batchSize = 32
-        self.checkpoint_path = "weights"
 
     def loadTrainingDataset(self, trainImagePath, trainMaskPath, quantity=0.75,resize=True):
         
@@ -81,12 +77,24 @@ class Training():
 
         return image_data, mask_data
 
-    def build(self):
+    def build(self, epochs = None, batchSize = None, model = 'mobilenet'):
 
         try: 
             os.mkdir(self.checkpoint_path)
         except:
             pass
+
+        if epochs != None: 
+            self.epochs = epochs 
+        else:
+            self.epochs = 100
+        
+        if batchSize != None: 
+            self.batchSize = batchSize
+        else: 
+            self.batchSize = 64
+
+        self.model = ModelToUse().get_model(model=model)
 
         self.model.save_weights(self.checkpoint_path.format(epoch=0))
         self.model.compile(optimizer='adam',
@@ -108,11 +116,15 @@ class Training():
             target_encoded =  tf.one_hot(target, depth=len(np.unique(target).shape))
             targets_encoded.append(target_encoded)
         return np.array(targets_encoded)
+        
 
     def startTraining(self, imagePath, maskPath):
 
         self.trainImages, self.trainTargets = self.loadTrainingDataset(imagePath, maskPath)
         self.valImages, self.valTargets = self.loadValidationDataset(imagePath, maskPath)
+
+        self.trainImages = self.trainImages/255.0
+        self.valImages = self.valImages/255.0
 
         self.trainTargets = self.transform_targets(self.trainTargets)
         self.Valtargets = self.transform_targets(self.valTargets)
