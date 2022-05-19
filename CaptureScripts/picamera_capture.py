@@ -1,10 +1,11 @@
 import errno 
 import os 
 from os import path 
-import time as time
+import time
 import argparse
 from gpiozero import LED # funcion led Del GPIO 
 import cv2
+from picamera import PiCamera
 
 
 class CaptureSession():
@@ -47,10 +48,14 @@ class CaptureSession():
         """
         cont=0
         while(cont<=self.final):
+            camera = PiCamera()
+            camera.start_preview()
+            time.sleep(2)
             self.flash.off()  # ensender Flash
             time.sleep(1)
             fileName = self.path+"/S"+time.strftime("%d-%m-%Y,%H:%M:%S")+".jpg"
-            os.system(f"raspistill -o {fileName}")
+            camera.capture(fileName)
+            #os.system(f"raspistill -o {fileName}")
             self.flash.on() # Apagar Flash
             time.sleep(0.2)
             cont=cont+1 

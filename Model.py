@@ -2,7 +2,7 @@ import tensorflow as tf
 
 from Models.MobileNetV2 import get_model as getMobilenet
 from Models.Unet import get_model as getUnet
-from Models.InceptionResnetV2_2 import get_model as getIRv2
+from Models.InceptionResnetV2 import get_model as getIRv2
 from Models.UnetMobilenet import get_model as getUM
 
 class ModelToUse():

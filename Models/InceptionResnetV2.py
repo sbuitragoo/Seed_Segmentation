@@ -71,83 +71,89 @@ def incresC(x,scale,name=None):
 
 #---------------------------------------Stem Block---------------------------------------#
 
-img_input = Input(shape=(256,256,3))
+def get_model():
 
-x = conv2d(img_input,32,3,2,'valid',True,name='conv1')
-x = conv2d(x,32,3,1,'valid',True,name='conv2')
-x = conv2d(x,64,3,1,'valid',True,name='conv3')
+  img_input = Input(shape=(256,256,3))
 
-x_11 = MaxPooling2D(3,strides=1,padding='valid',name='stem_br_11'+'_maxpool_1')(x)
-x_12 = conv2d(x,64,3,1,'valid',True,name='stem_br_12')
+  x = conv2d(img_input,32,3,2,'valid',True,name='conv1')
+  x = conv2d(x,32,3,1,'valid',True,name='conv2')
+  x = conv2d(x,64,3,1,'valid',True,name='conv3')
 
-x = Concatenate(axis=3, name = 'stem_concat_1')([x_11,x_12])
+  x_11 = MaxPooling2D(3,strides=1,padding='valid',name='stem_br_11'+'_maxpool_1')(x)
+  x_12 = conv2d(x,64,3,1,'valid',True,name='stem_br_12')
 
-x_21 = conv2d(x,64,1,1,'same',True,name='stem_br_211')
-x_21 = conv2d(x_21,64,[1,7],1,'same',True,name='stem_br_212')
-x_21 = conv2d(x_21,64,[7,1],1,'same',True,name='stem_br_213')
-x_21 = conv2d(x_21,96,3,1,'valid',True,name='stem_br_214')
+  x = Concatenate(axis=3, name = 'stem_concat_1')([x_11,x_12])
 
-x_22 = conv2d(x,64,1,1,'same',True,name='stem_br_221')
-x_22 = conv2d(x_22,96,3,1,'valid',True,name='stem_br_222')
+  x_21 = conv2d(x,64,1,1,'same',True,name='stem_br_211')
+  x_21 = conv2d(x_21,64,[1,7],1,'same',True,name='stem_br_212')
+  x_21 = conv2d(x_21,64,[7,1],1,'same',True,name='stem_br_213')
+  x_21 = conv2d(x_21,96,3,1,'valid',True,name='stem_br_214')
 
-x = Concatenate(axis=3, name = 'stem_concat_2')([x_21,x_22])
+  x_22 = conv2d(x,64,1,1,'same',True,name='stem_br_221')
+  x_22 = conv2d(x_22,96,3,1,'valid',True,name='stem_br_222')
 
-x_31 = conv2d(x,192,3,1,'valid',True,name='stem_br_31')
-x_32 = MaxPooling2D(3,strides=1,padding='valid',name='stem_br_32'+'_maxpool_2')(x)
-x = Concatenate(axis=3, name = 'stem_concat_3')([x_31,x_32])
+  x = Concatenate(axis=3, name = 'stem_concat_2')([x_21,x_22])
+
+  x_31 = conv2d(x,192,3,1,'valid',True,name='stem_br_31')
+  x_32 = MaxPooling2D(3,strides=1,padding='valid',name='stem_br_32'+'_maxpool_2')(x)
+  x = Concatenate(axis=3, name = 'stem_concat_3')([x_31,x_32])
 
 
-### Network
+  ### Network
 
 
-#---------------------------------------Inception-ResNet-A modules---------------------------------------#
+  #---------------------------------------Inception-ResNet-A modules---------------------------------------#
 
-x = incresA(x,0.15,name='incresA_1')
-x = incresA(x,0.15,name='incresA_2')
-x = incresA(x,0.15,name='incresA_3')
-x = incresA(x,0.15,name='incresA_4')
+  x = incresA(x,0.15,name='incresA_1')
+  x = incresA(x,0.15,name='incresA_2')
+  x = incresA(x,0.15,name='incresA_3')
+  x = incresA(x,0.15,name='incresA_4')
 
-#35 × 35 to 17 × 17 reduction module.
-x_red_11 = MaxPooling2D(3,strides=2,padding='valid',name='red_maxpool_1')(x)
+  #35 × 35 to 17 × 17 reduction module.
+  x_red_11 = MaxPooling2D(3,strides=2,padding='valid',name='red_maxpool_1')(x)
 
-x_red_12 = conv2d(x,384,3,2,'valid',True,name='x_red1_c1')
+  x_red_12 = conv2d(x,384,3,2,'valid',True,name='x_red1_c1')
 
-x_red_13 = conv2d(x,256,1,1,'same',True,name='x_red1_c2_1')
-x_red_13 = conv2d(x_red_13,256,3,1,'same',True,name='x_red1_c2_2')
-x_red_13 = conv2d(x_red_13,384,3,2,'valid',True,name='x_red1_c2_3')
+  x_red_13 = conv2d(x,256,1,1,'same',True,name='x_red1_c2_1')
+  x_red_13 = conv2d(x_red_13,256,3,1,'same',True,name='x_red1_c2_2')
+  x_red_13 = conv2d(x_red_13,384,3,2,'valid',True,name='x_red1_c2_3')
 
-x = Concatenate(axis=3, name='red_concat_1')([x_red_11,x_red_12,x_red_13])
+  x = Concatenate(axis=3, name='red_concat_1')([x_red_11,x_red_12,x_red_13])
 
-#Inception-ResNet-B modules
-x = incresB(x,0.1,name='incresB_1')
-x = incresB(x,0.1,name='incresB_2')
-x = incresB(x,0.1,name='incresB_3')
-x = incresB(x,0.1,name='incresB_4')
-x = incresB(x,0.1,name='incresB_5')
-x = incresB(x,0.1,name='incresB_6')
-x = incresB(x,0.1,name='incresB_7')
+  #Inception-ResNet-B modules
+  x = incresB(x,0.1,name='incresB_1')
+  x = incresB(x,0.1,name='incresB_2')
+  x = incresB(x,0.1,name='incresB_3')
+  x = incresB(x,0.1,name='incresB_4')
+  x = incresB(x,0.1,name='incresB_5')
+  x = incresB(x,0.1,name='incresB_6')
+  x = incresB(x,0.1,name='incresB_7')
 
-#17 × 17 to 8 × 8 reduction module.
-x_red_21 = MaxPooling2D(3,strides=2,padding='valid',name='red_maxpool_2')(x)
+  #17 × 17 to 8 × 8 reduction module.
+  x_red_21 = MaxPooling2D(3,strides=2,padding='valid',name='red_maxpool_2')(x)
 
-x_red_22 = conv2d(x,256,1,1,'same',True,name='x_red2_c11')
-x_red_22 = conv2d(x_red_22,384,3,2,'valid',True,name='x_red2_c12')
+  x_red_22 = conv2d(x,256,1,1,'same',True,name='x_red2_c11')
+  x_red_22 = conv2d(x_red_22,384,3,2,'valid',True,name='x_red2_c12')
 
-x_red_23 = conv2d(x,256,1,1,'same',True,name='x_red2_c21')
-x_red_23 = conv2d(x_red_23,256,3,2,'valid',True,name='x_red2_c22')
+  x_red_23 = conv2d(x,256,1,1,'same',True,name='x_red2_c21')
+  x_red_23 = conv2d(x_red_23,256,3,2,'valid',True,name='x_red2_c22')
 
-x_red_24 = conv2d(x,256,1,1,'same',True,name='x_red2_c31')
-x_red_24 = conv2d(x_red_24,256,3,1,'same',True,name='x_red2_c32')
-x_red_24 = conv2d(x_red_24,256,3,2,'valid',True,name='x_red2_c33')
+  x_red_24 = conv2d(x,256,1,1,'same',True,name='x_red2_c31')
+  x_red_24 = conv2d(x_red_24,256,3,1,'same',True,name='x_red2_c32')
+  x_red_24 = conv2d(x_red_24,256,3,2,'valid',True,name='x_red2_c33')
 
-x = Concatenate(axis=3, name='red_concat_2')([x_red_21,x_red_22,x_red_23,x_red_24])
+  x = Concatenate(axis=3, name='red_concat_2')([x_red_21,x_red_22,x_red_23,x_red_24])
 
-#Inception-ResNet-C modules
-x = incresC(x,0.2,name='incresC_1')
-x = incresC(x,0.2,name='incresC_2')
-x = incresC(x,0.2,name='incresC_3')
+  #Inception-ResNet-C modules
+  x = incresC(x,0.2,name='incresC_1')
+  x = incresC(x,0.2,name='incresC_2')
+  x = incresC(x,0.2,name='incresC_3')
 
-#TOP
-x = GlobalAveragePooling2D(data_format='channels_last')(x)
-x = Dropout(0.6)(x)
-x = Dense(3, activation='softmax')(x)
+  #TOP
+  x = GlobalAveragePooling2D(data_format='channels_last')(x)
+  x = Dropout(0.6)(x)
+  x = Dense(3, activation='softmax')(x)
+
+  model = Model(img_input, x, name='inception_resnet_v2')
+
+  return model

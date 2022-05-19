@@ -20,17 +20,18 @@ def upsample(filters,size,strides=2,padding="same",batchnorm=False,dropout=0):
 def get_encoder(input_shape=[None,None,3],name="encoder", trainable = True): 
     Input = tf.keras.layers.Input(shape=input_shape)
     base_model = tf.keras.applications.InceptionResNetV2(input_tensor=Input, include_top=False)
-    layer_names = [
-    'block_1_expand_relu',   # 64x64
-    'block_3_expand_relu',   # 32x32
-    'block_6_expand_relu',   # 16x16
-    'block_13_expand_relu',  # 8x8
-    'block_16_project',      # 4x4
-    ]
-    layers = [base_model.get_layer(name).output for name in layer_names]
+    # layer_names = [
+    # 'block_1_expand_relu',   # 64x64
+    # 'block_3_expand_relu',   # 32x32
+    # 'block_6_expand_relu',   # 16x16
+    # 'block_13_expand_relu',  # 8x8
+    # 'block_16_project',      # 4x4
+    # ]
+    #layers = [base_model.get_layer(name).output for name in base_model.layers]
 
+    output = base_model.output
     # Create the feature extraction model
-    encoder  = tf.keras.Model(inputs=Input, outputs=layers,name=name)
+    encoder  = tf.keras.Model(inputs=Input, outputs=output,name=name)
     encoder.trainable = False
 
     return encoder
