@@ -51,7 +51,7 @@ class CaptureSession():
             camera = PiCamera()
             camera.start_preview()
             time.sleep(2)
-            self.flash.off()  # ensender Flash
+            self.flash.off()  # encender Flash
             time.sleep(1)
             fileName = self.path+"/S"+time.strftime("%d-%m-%Y,%H:%M:%S")+".jpg"
             camera.capture(fileName)

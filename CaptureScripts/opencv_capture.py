@@ -49,7 +49,7 @@ class CaptureSession():
         while(cont<=self.final):
             camera = cv2.VideoCapture(0)
             time.sleep(0.7) # Espara un segundo y medio
-            self.flash.off()  # ensender Flash
+            self.flash.off()  # encender Flash
             time.sleep(1)
             ret,frame = camera.read()
             cv2.imwrite(self.path+"/S"+time.strftime("%d-%m-%Y,%H:%M:%S")+".jpg", frame) # Capturar imgen
