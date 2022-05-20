@@ -2,7 +2,7 @@ import numpy as np
 import cv2
 import os
 
-def load_data(path, quantity=None, resize=False):
+def load_data(path, size=224, quantity=None, resize=False):
     """Loads a set of images 
 
     Args:
@@ -20,7 +20,7 @@ def load_data(path, quantity=None, resize=False):
         for img in sorted(os.listdir(path)[:quantity]):
             image = cv2.imread(os.path.join(path, img))
             if resize:
-                image = cv2.resize(image, (224,224))
+                image = cv2.resize(image, (size,size))
                 data.append(image)
             else:
                 data.append(image)

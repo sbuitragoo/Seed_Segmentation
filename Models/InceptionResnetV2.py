@@ -1,6 +1,7 @@
 from tensorflow.keras.layers import Input, Conv2D, MaxPooling2D, GlobalAveragePooling2D, BatchNormalization
 from tensorflow.keras.layers import Dense, Dropout, Flatten, Activation, Concatenate, Lambda
 from tensorflow.keras.models import Model
+from tensorflow.keras import backend
 
 
 
