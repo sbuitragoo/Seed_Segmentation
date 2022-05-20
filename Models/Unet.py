@@ -70,7 +70,7 @@ def get_model(output_channels = 1, size = 128, dropout = 0, trainable = False,na
     conv9 = Conv2D(64, 3, activation = "relu", padding = "same")(up9)
     conv9 = Conv2D(64, 3, activation = "relu", padding = "same")(conc9)
 
-    out = Conv2D(3, 1, activation = "softmax")(conv9)
+    out = Conv2D(output_channels, 1, activation = "softmax")(conv9)
     model = keras.Model(inputs=inputs, outputs=out,name=name)
 
     return model

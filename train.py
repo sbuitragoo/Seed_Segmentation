@@ -1,4 +1,4 @@
-from Model import ModelToUse 
+from model import ModelToUse 
 import tensorflow as tf
 import matplotlib.pyplot as plt
 import os
