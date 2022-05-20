@@ -71,10 +71,10 @@ class DataAugmentation():
                                                     class_mode=None,
                                                     save_format='png', seed=42)
         
-        n_iter = int(int(self.numberOfImages)/32)
+        n_iter = self.numberOfImages/2
 
-        if int(self.numberOfImages) % 32:
-            n_iter += 1
+        #if int(self.numberOfImages) % 32:
+            #n_iter += 1
         
         
         print(f"Copying Original Images")
@@ -82,7 +82,7 @@ class DataAugmentation():
             copy2(os.path.join(self.imagePath, img_path), self.augmentedImagesPath)
             copy2(os.path.join(self.maskDir, mask_path), self. augmentedTargetPath)
 
-        print(f"Generating {n_iter*32} images")
+        print(f"Generating images")
         for i in range(n_iter):
             image_generator.next()
             masks_generator.next()

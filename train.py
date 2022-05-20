@@ -26,7 +26,7 @@ class Training():
             for img in sorted(os.listdir(self.trainImagePath)[:int(len(os.listdir(self.trainImagePath))*quantity)]):
                 image = cv2.imread(os.path.join(self.trainImagePath, img))
                 if resize:
-                    image = cv2.resize(image, (size,size))
+                    image = cv2.resize(image, (int(size),int(size)))
                     image_data.append(image)
                 else:
                     image_data.append(image)
@@ -39,7 +39,7 @@ class Training():
             for img in sorted(os.listdir(self.trainMaskPath)[:int(len(os.listdir(self.trainMaskPath))*quantity)]):
                 image = cv2.imread(os.path.join(self.trainMaskPath, img))
                 if resize:
-                    image = cv2.resize(image, (size,size))
+                    image = cv2.resize(image, (int(size),int(size)))
                     mask_data.append(image)
                 else:
                     mask_data.append(image)
@@ -56,7 +56,7 @@ class Training():
             for img in sorted(os.listdir(self.valImagePath)[int(len(os.listdir(self.valImagePath))*quantity):]):
                 image = cv2.imread(os.path.join(self.valImagePath, img))
                 if resize:
-                    image = cv2.resize(image, (size,size))
+                    image = cv2.resize(image, (int(size),int(size)))
                     image_data.append(image)
                 else:
                     image_data.append(image)
@@ -69,7 +69,7 @@ class Training():
             for img in sorted(os.listdir(self.valMaskPath)[int(len(os.listdir(self.valMaskPath))*quantity):]):
                 image = cv2.imread(os.path.join(self.valMaskPath, img))
                 if resize:
-                    image = cv2.resize(image, (size,size))
+                    image = cv2.resize(image, (int(size),int(size)))
                     mask_data.append(image)
                 else:
                     mask_data.append(image)

@@ -2,7 +2,7 @@ from tensorflow.keras.layers import Input, Conv2D, MaxPooling2D, GlobalAveragePo
 from tensorflow.keras.layers import Dense, Dropout, Flatten, Activation, Concatenate, Lambda
 from tensorflow.keras.models import Model
 from tensorflow.keras import backend
-
+import tensorflow as tf
 
 
 #---------------------------------------Convolutional Block---------------------------------------#
@@ -153,7 +153,11 @@ def get_model():
   #TOP
   x = GlobalAveragePooling2D(data_format='channels_last')(x)
   x = Dropout(0.6)(x)
-  x = Dense(3, activation='softmax')(x)
+  last = tf.keras.layers.Conv2DTranspose(
+        3, 3, strides=2,
+        padding='same',activation=tf.keras.activations.softmax)  #64x64 -> 128x128
+
+  x = last(x)
 
   model = Model(img_input, x, name='inception_resnet_v2')
 

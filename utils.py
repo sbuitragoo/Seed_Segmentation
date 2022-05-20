@@ -20,7 +20,7 @@ def load_data(path, size=224, quantity=None, resize=False):
         for img in sorted(os.listdir(path)[:quantity]):
             image = cv2.imread(os.path.join(path, img))
             if resize:
-                image = cv2.resize(image, (size,size))
+                image = cv2.resize(image, (int(size),int(size)))
                 data.append(image)
             else:
                 data.append(image)
