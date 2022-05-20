@@ -98,7 +98,7 @@ class Training():
 
         self.model.save_weights(self.checkpoint_path.format(epoch=0))
         self.model.compile(optimizer='adam',
-                            loss = "categorical_crossentropy")
+                            loss = tf.keras.losses.SparseCategoricalCrossentropy(), metrics=['accuracy'])
 
         self.modelHistory = self.model.fit(
                                 self.trainImages, self.trainTargets,
