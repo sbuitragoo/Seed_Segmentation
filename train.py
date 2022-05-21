@@ -193,13 +193,10 @@ if __name__ == "__main__":
 
     arguments = parser.parse_args()
 
-    def retData(input1, input2):
-        return input1, input2
-
     if arguments.command == "params":
 
         training = Training()
 
         model, history = training.startTraining(imagePath = arguments.i, maskPath = arguments.m, model = arguments.model, size = arguments.size, epochs = arguments.epochs, batchSize = arguments.batch, mode=arguments.mode)
 
-        retData(model, history)
+        model.save("model.h5")

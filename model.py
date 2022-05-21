@@ -4,6 +4,8 @@ from Models.MobileNetV2 import get_model as getMobilenet
 from Models.Unet import get_model as getUnet
 from Models.InceptionResnetV2 import get_model as getIRv2
 from Models.UnetMobilenet import get_model as getUM
+from Models.UnetVgg import get_model as getUVgg
+
 
 class ModelToUse():
 
@@ -12,7 +14,8 @@ class ModelToUse():
         self.models = {'mobilenetv2': getMobilenet,
                         'unet': getUnet,
                         'inceptionresnetv2': getIRv2,
-                        'unetmobilenet': getUM}
+                        'unetmobilenet': getUM,
+                        'unetvgg': getUVgg}
 
     def print_available_models(self):
         print('Availaible models: ')

@@ -79,6 +79,12 @@ class MakeTfRecords():
 
 
     def main(self, imagePath, maskPath, tfRecordPath, labels, valSize):
+
+        try:
+            os.mkdir(tfRecordPath)
+        except:
+            pass
+        
         self.imagePath = imagePath
         self.maskPath = maskPath
         VAL_TFRECORD = path.join(tfRecordPath, "val-data.tfrecord")
@@ -133,4 +139,4 @@ if __name__ == "__main__":
     else:
 
         tfRecords = MakeTfRecords()
-        tfRecords.main(imagePath='./DatasetE2/JPEGImages', maskPath='./DatasetE2/SegmentationClass', tfRecordPath = './tfrecords/', labels = 'labelmap.txt', valSize = 0.2)
+        tfRecords.main(imagePath='../../DatasetE2/JPEGImages', maskPath='../../DatasetE2/SegmentationClass', tfRecordPath = './tfrecords/', labels = '../../DatasetE2/labelmap.txt', valSize = 0.2)

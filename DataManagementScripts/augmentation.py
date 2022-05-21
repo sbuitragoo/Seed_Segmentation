@@ -46,7 +46,8 @@ class DataAugmentation():
         seed = np.random.randint(100)
         IMGS_OUT = os.path.join(self.resultsPath, 'Images')
         IMGS_SUBDIR = self.imageDir.strip("/").split("/")[-1]
-        self.image_generator = self.datagen.flow_from_directory(directory = DATA_PATH,
+
+        self.image_generator = self.datagen.flow_from_directory(directory = self.DATA_PATH,
                                                     target_size = image_size,
                                                     save_to_dir = IMGS_OUT,
                                                     classes = [IMGS_SUBDIR],
@@ -54,10 +55,9 @@ class DataAugmentation():
                                                     save_format = 'jpg',
                                                     seed = seed)
 
-        DATA_PATH = os.path.abspath(os.path.join(self.imageDir, '..')) 
         MASK_OUT = os.path.join(self.resultsPath, 'Masks')
         MASKS_SUBDIR = self.maskDir.strip("/").split("/")[-1]
-        self.masks_generator = self.datagen.flow_from_directory(directory = DATA_PATH,
+        self.masks_generator = self.datagen.flow_from_directory(directory = self.DATA_PATH,
                                                     target_size = image_size,
                                                     save_to_dir = MASK_OUT,
                                                     classes = [MASKS_SUBDIR],
@@ -95,7 +95,7 @@ if __name__=="__main__":
                     help="Path where the targets are located")
     auto.add_argument('--tp', type=str, required=True,
                     help="Classes path")
-    auto.add_argument('--nim', type=str, required=True,
+    auto.add_argument('--nim', type=int, required=True,
                     help="Number of images")
 
     arguments = parser.parse_args()
