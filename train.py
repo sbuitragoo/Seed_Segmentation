@@ -189,7 +189,7 @@ if __name__ == "__main__":
     params.add_argument('--size', type=int, required=False,
                         help="Image Size")
     params.add_argument('--mode', type=str, required=False,
-                        help="Image Size")
+                        help="from_foler or tfrecord")
 
     arguments = parser.parse_args()
 

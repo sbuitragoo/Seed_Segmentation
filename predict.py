@@ -3,6 +3,7 @@ from tf.keras.model import load_model
 import matplotlib.pyplot as plt
 import tensorflow as tf
 import numpy as np
+import argparse
 import cv2
 import os
 
@@ -35,20 +36,19 @@ class Prediction():
             Y[...,2] = np.where(X==i, labels[key][2], Y[...,2])
         return Y
         
-    def Predict(self, imagePath, labelsPath, outPath, weightsPath, size=224):
+    def Predict(self, imagePath, labelsPath, outPath, size=224):
 
         self.imageSize = size
         self.classes = 3
-
-        img_path = imagePath
-        out_path = outPath
-        weights_path = weightsPath
-        labels_Path = labelsPath
         
+        try:
+            os.mkdir(outPath)
+        except:
+            pass
 
-        labels = parse_labelfile(labels_Path)
+        labels = parse_labelfile(labelsPath)
 
-        img = plt.imread(img_path)/255
+        img = plt.imread(imagePath)/255
         X = tf.convert_to_tensor(img)
         X = tf.image.resize(X, (self.imageSize, self.imageSize))
         X = tf.expand_dims(X, 0)
@@ -61,6 +61,28 @@ class Prediction():
         Y = cv2.resize(Y, (img.shape[1], img.shape[0]), interpolation=cv2.INTER_NEAREST)
         self.DisplayData([img, Y])
 
-        if out_path != None:
+        if outPath != None:
             Y = cv2.cvtColor(Y, cv2.COLOR_BGR2RGB)
-            cv2.imwrite(os.path.join(out_path+"prediction"), Y)
+            cv2.imwrite(os.path.join(outPath+"prediction"), Y)
+
+if __name__ == "__main__":
+
+
+    parser = argparse.ArgumentParser()
+    subparser = parser.add_subparsers(dest='command')
+    params = subparser.add_parser('params')
+    params.add_argument('--i', type=str, required=True,
+                        help="Path to the images")
+    params.add_argument('--l', type=str, required=True,
+                        help="Path to the labels")
+    params.add_argument('--out', type=int, required=False,
+                        help="Path to save predictions")                                     
+    params.add_argument('--size', type=int, required=False,
+                        help="Image Size")
+
+    arguments = parser.parse_args()
+
+    if arguments.command == "params":
+
+        prediction = Prediction()
+        prediction.Predict(imagePath=arguments.i, labelsPath=arguments.l, outPath=arguments.out, size=arguments.size)
