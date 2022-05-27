@@ -1,5 +1,4 @@
 from DataManagementScripts.dataset import parse_labelfile
-from tf.keras.model import load_model
 import matplotlib.pyplot as plt
 import tensorflow as tf
 import numpy as np
@@ -53,7 +52,7 @@ class Prediction():
         X = tf.image.resize(X, (self.imageSize, self.imageSize))
         X = tf.expand_dims(X, 0)
 
-        model = load_model("model.h5")
+        model = tf.keras.models.load_model("model.h5")
 
         Y = model.predict(X)
         Y = tf.argmax(Y, axis=-1)
